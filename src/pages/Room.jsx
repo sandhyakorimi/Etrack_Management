@@ -92,7 +92,7 @@ export const Room = () => {
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
           <p className="text-sm text-gray-500 dark:text-gray-400">Not Working</p>
           <p className="text-xl font-semibold mt-1 text-error-600 dark:text-error-400">
-            {room.properties?.filter(p => p.status === 'not-working').length || 0}
+            {room.properties?.filter(p => p.status === 'not_working').length || 0}
           </p>
         </div>
         <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
