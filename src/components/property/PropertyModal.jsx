@@ -62,20 +62,21 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
             }
             .field-container div,
             .field-container p {
-              opacity: ${isEditing ? 0 : 1};
-              transform: ${isEditing ? 'translateY(-10px)' : 'translateY(0)'};
-              position: ${isEditing ? 'absolute' : 'static'};
-            }
-          `}
-        </style>
-      )}
+    opacity: ${isEditing ? 0 : 1};
+    transform: ${isEditing ? 'translateY(-10px)' : 'translateY(0)'};
+    position: ${isEditing ? 'absolute' : 'static'};
+  }
+}
+      `}
+    </style>
+  )}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 animate-fade-in">
         <div 
-          className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-auto animate-slide-up"
+          className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-lg shadow-xl w-full max-w-sm"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
               Property Details
             </h2>
             <button
@@ -87,9 +88,9 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
           </div>
           
           <div className={cn("p-4", !enableEdit && "pb-2")}>
-            <div className="flex items-center mb-6">
+            <div className="flex items-center mb-4">
               <div className={cn(
-                "p-4 rounded-full mr-4",
+                "p-3 rounded-full mr-3",
                 property.status === 'working' 
                   ? 'bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400' 
                   : 'bg-error-100 dark:bg-error-900 text-error-600 dark:text-error-400'
@@ -98,18 +99,18 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
               </div>
               
               <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                <h3 className="text-base font-medium text-gray-900 dark:text-white">
                   {formatType(property.type)}
                 </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   {property.brand} {property.model}
                 </p>
               </div>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div className={cn(enableEdit && "field-container")}>
-                <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
                   Status
                 </h4>
                 {enableEdit && isEditing ? (
@@ -117,14 +118,14 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
                     name="status"
                     value={formData.status}
                     onChange={handleInputChange}
-                    className="border rounded p-1 w-32 dark:bg-gray-700 dark:text-white"
+                    className="border rounded p-1 w-28 dark:bg-gray-700 dark:text-white text-sm"
                   >
                     <option value="working">Working</option>
                     <option value="not-working">Not Working</option>
                   </select>
                 ) : (
                   <div className={cn(
-                    "inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium w-32",
+                    "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium w-28",
                     property.status === 'working' 
                       ? 'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-300' 
                       : 'bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-300'
@@ -135,30 +136,30 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
               </div>
               
               <div>
-                <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
                   Brand
                 </h4>
-                <p className="text-gray-900 dark:text-white">{property.brand}</p>
+                <p className="text-sm text-gray-900 dark:text-white">{property.brand}</p>
               </div>
               
               <div>
-                <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
                   Model
                 </h4>
-                <p className="text-gray-900 dark:text-white">{property.model}</p>
+                <p className="text-sm text-gray-900 dark:text-white">{property.model}</p>
               </div>
               
               {property.purchaseDate && (
                 <div>
-                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                  <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
                     Purchase Date
                   </h4>
-                  <p className="text-gray-900 dark:text-white">{property.purchaseDate}</p>
+                  <p className="text-sm text-gray-900 dark:text-white">{property.purchaseDate}</p>
                 </div>
               )}
               
               <div className={cn(enableEdit && "field-container", !enableEdit && "mb-0")}>
-                <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                <h4 className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
                   Notes
                 </h4>
                 {enableEdit && isEditing ? (
@@ -166,10 +167,10 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
                     name="notes"
                     value={formData.notes}
                     onChange={handleInputChange}
-                    className="border rounded p-1 w-full h-20 dark:bg-gray-700 dark:text-white"
+                    className="border rounded p-1 w-full h-16 dark:bg-gray-700 dark:text-white text-sm"
                   />
                 ) : (
-                  <p className="text-gray-900 dark:text-white w-full min-h-10 max-h-20 overflow-auto">
+                  <p className="text-sm text-gray-900 dark:text-white w-full min-h-8 max-h-16 overflow-hidden">
                     {property.notes || 'N/A'}
                   </p>
                 )}
@@ -186,14 +187,14 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
                 <Button 
                   variant="outline" 
                   onClick={() => setIsEditing(false)}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out text-sm py-1 px-3"
                 >
                   Cancel
                 </Button>
                 <Button 
                   variant="primary" 
                   onClick={handleSave}
-                  className="hover:bg-primary-700 dark:hover:bg-primary-600 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                  className="hover:bg-primary-700 dark:hover:bg-primary-600 transform hover:scale-105 transition-all duration-300 ease-in-out text-sm py-1 px-3"
                 >
                   Save
                 </Button>
@@ -204,7 +205,7 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
                   <Button 
                     variant="outline" 
                     onClick={handleEdit}
-                    className="hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out"
+                    className="hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:scale-105 active:scale-95 transition-all duration-300 ease-in-out text-sm py-1 px-3"
                   >
                     Edit
                   </Button>
@@ -212,7 +213,7 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
                 <Button 
                   variant="outline" 
                   onClick={onClose}
-                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out"
+                  className="hover:bg-gray-100 dark:hover:bg-gray-700 transform hover:scale-105 transition-all duration-300 ease-in-out text-sm py-1 px-3 mb-2"
                 >
                   Done
                 </Button>
@@ -223,4 +224,4 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
       </div>
     </>
   );
-};
+}
