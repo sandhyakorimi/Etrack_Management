@@ -8,7 +8,7 @@ const PropertyType = {
   Mouse: 'mouse',
   Fan: 'fan',
   Light: 'light',
-  Router: 'router',
+  Router: 'wifi-router',
   AC: 'ac',
 };
 
@@ -66,7 +66,7 @@ export const PropertyList = ({ properties, title = 'Properties', onEdit, enableE
           >
             <option value="all">All Status</option>
             <option value="working">Working</option>
-            <option value="not-working">Not Working</option>
+            <option value="not_working">Not Working</option>
           </select>
         </div>
       </div>

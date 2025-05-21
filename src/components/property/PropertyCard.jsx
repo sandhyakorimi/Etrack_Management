@@ -8,13 +8,13 @@ import { cn } from '../../utils/cn';
 
 // Map property types to icons
 const propertyIcons = {
-  monitor: <Monitor className="h-5 w-5" />,
-  keyboard: <Keyboard className="h-5 w-5" />,
-  mouse: <Mouse className="h-5 w-5" />,
-  fan: <Fan className="h-5 w-5" />,
-  light: <Lightbulb className="h-5 w-5" />,
-  router: <Wifi className="h-5 w-5" />,
-  ac: <AirVent className="h-5 w-5" />,
+  'monitor': <Monitor className="h-5 w-5" />,
+  'keyboard': <Keyboard className="h-5 w-5" />,
+  'mouse': <Mouse className="h-5 w-5" />,
+  'fan': <Fan className="h-5 w-5" />,
+  'light': <Lightbulb className="h-5 w-5" />,
+  'wifi-router': <Wifi className="h-5 w-5" />,
+  'ac': <AirVent className="h-5 w-5" />,
 };
 
 export const PropertyCard = ({ property, onClick }) => {
