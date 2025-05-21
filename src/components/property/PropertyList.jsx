@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { PropertyCard } from './PropertyCard';
 import { PropertyModal } from './PropertyModal';
 
-// Assuming PropertyType is an object with property type strings
-// Example:
 const PropertyType = {
   Monitor: 'monitor',
   Keyboard: 'keyboard',
@@ -11,10 +9,10 @@ const PropertyType = {
   Fan: 'fan',
   Light: 'light',
   Router: 'router',
-  AC: 'ac'
+  AC: 'ac',
 };
 
-export const PropertyList = ({ properties, title = 'Properties' }) => {
+export const PropertyList = ({ properties, title = 'Properties', onEdit, enableEdit = true }) => {
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [filterType, setFilterType] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -27,7 +25,6 @@ export const PropertyList = ({ properties, title = 'Properties' }) => {
     setSelectedProperty(null);
   };
 
-  // Filter properties based on selected filters
   const filteredProperties = properties.filter((property) => {
     if (filterType !== 'all' && property.type !== filterType) {
       return false;
@@ -38,7 +35,6 @@ export const PropertyList = ({ properties, title = 'Properties' }) => {
     return true;
   });
 
-  // Count properties by type
   const propertyCounts = properties.reduce((acc, property) => {
     acc[property.type] = (acc[property.type] || 0) + 1;
     return acc;
@@ -50,7 +46,6 @@ export const PropertyList = ({ properties, title = 'Properties' }) => {
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{title}</h2>
-
         <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
           <select
             value={filterType}
@@ -64,7 +59,6 @@ export const PropertyList = ({ properties, title = 'Properties' }) => {
               </option>
             ))}
           </select>
-
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
@@ -72,11 +66,10 @@ export const PropertyList = ({ properties, title = 'Properties' }) => {
           >
             <option value="all">All Status</option>
             <option value="working">Working</option>
-            <option value="not_working">Not Working</option>
+            <option value="not-working">Not Working</option>
           </select>
         </div>
       </div>
-
       {filteredProperties.length === 0 ? (
         <div className="text-center py-10 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           <p className="text-gray-500 dark:text-gray-400">No properties found with the selected filters.</p>
@@ -92,9 +85,13 @@ export const PropertyList = ({ properties, title = 'Properties' }) => {
           ))}
         </div>
       )}
-
       {selectedProperty && (
-        <PropertyModal property={selectedProperty} onClose={closeModal} />
+        <PropertyModal
+          property={selectedProperty}
+          onClose={closeModal}
+          onEdit={enableEdit ? onEdit : undefined}
+          enableEdit={enableEdit}
+        />
       )}
     </div>
   );
