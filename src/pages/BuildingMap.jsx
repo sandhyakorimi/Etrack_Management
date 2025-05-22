@@ -95,12 +95,18 @@ export const BuildingMap = () => {
                 </h3>
                 
                 <div className="space-y-4">
-                  {/* Center/Outdoor Hall */}
+                  {/* Center/Outdoor/Corridor Hall */}
                   {(() => {
                     const floor = buildingData.floors.find(f => f.id === selectedFloor);
-                    const centerHall = floor?.halls.find(h => h.name === 'Center' || h.name === 'Outdoor');
+                    const centerHall = floor?.halls.find(h => h.name === 'Center' || h.name === 'Outdoor' || h.name === 'Corridor');
                     
-                    if (!centerHall) return null;
+                    if (!centerHall) {
+                      return (
+                        <div className="bg-yellow-100 dark:bg-yellow-900 rounded-lg p-4 border border-gray-300 dark:border-gray-600 text-center">
+                          <p className="text-gray-600 dark:text-gray-400">No Corridor or Outdoor hall found for this floor.</p>
+                        </div>
+                      );
+                    }
                     
                     const hallProps = centerHall.rooms.flatMap(room => room.properties);
                     const workingCount = hallProps.filter(p => p.status === 'working').length;
@@ -108,11 +114,19 @@ export const BuildingMap = () => {
                       ? Math.round((workingCount / hallProps.length) * 100)
                       : 100;
                     
-                    // Set Center/Outdoor hall to yellow gradient regardless of health percentage
-                    // Text color is gray-900 for readability on yellow background
+                    // Set Center/Outdoor/Corridor hall to yellow gradient regardless of health percentage
                     let healthColor = 'from-yellow-500 to-yellow-400';
                     let textColor = 'text-gray-900';
                     let borderColor = 'border-gray-300 dark:border-gray-600';
+                    // Uncomment for dynamic health colors
+                    // if (healthPercentage < 70) {
+                    //   healthColor = 'from-yellow-500 to-yellow-400';
+                    //   textColor = 'text-gray-900';
+                    // }
+                    // if (healthPercentage < 50) {
+                    //   healthColor = 'from-red-500 to-red-400';
+                    //   textColor = 'text-white';
+                    // }
                     
                     return (
                       <div 
@@ -129,8 +143,6 @@ export const BuildingMap = () => {
                               ? Math.round((roomWorking / roomProps.length) * 100)
                               : 100;
                             
-                            // Set room background opacity based on room health
-                            // Healthy: 70-100% (90% opacity), Needs Attention: 50-69% (75% opacity), Critical: 0-49% (60% opacity)
                             let roomBg = 'bg-white bg-opacity-90';
                             // if (roomHealth < 70) roomBg = 'bg-white bg-opacity-75';
                             // if (roomHealth < 50) roomBg = 'bg-white bg-opacity-60';
@@ -191,8 +203,6 @@ export const BuildingMap = () => {
                                   ? Math.round((roomWorking / roomProps.length) * 100)
                                   : 100;
                                 
-                                // Set room background opacity based on room health
-                                // Healthy: 70-100% (90% opacity), Needs Attention: 50-69% (75% opacity), Critical: 0-49% (60% opacity)
                                 let roomBg = 'bg-white bg-opacity-90';
                                 // if (roomHealth < 70) roomBg = 'bg-white bg-opacity-75';
                                 // if (roomHealth < 50) roomBg = 'bg-white bg-opacity-60';
