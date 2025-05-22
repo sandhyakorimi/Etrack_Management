@@ -173,7 +173,7 @@
 
 
 
-
+// ****************** Make the sidebar visible in all screens properly  ********************
 
 import React, { useState } from 'react';
 import { Building2, Gauge, LampDesk, Layers, Map } from 'lucide-react';
@@ -256,7 +256,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
 
       <div
         className={cn(
-          'fixed inset-y-0 left-0 z-[50] w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 pt-16 flex flex-col transition-transform duration-300 ease-in-out transform',
+          ' fixed inset-y-0 left-0 z-[50] w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 pt-16 flex flex-col transition-transform duration-300 ease-in-out transform',
           isOpen ? 'translate-x-0 visible opacity-100' : '-translate-x-full invisible opacity-0',
           'lg:translate-x-0 lg:visible lg:opacity-100 lg:block lg:z-[30]',
           'overflow-y-auto',
