@@ -254,6 +254,7 @@ import { X, Monitor, Keyboard, Mouse, Fan, Lightbulb, Wifi, AirVent } from 'luci
 import { cn } from '../../utils/cn';
 
 const propertyIcons = {
+
   monitor: <Monitor className="h-8 w-8" />,
   keyboard: <Keyboard className="h-8 w-8" />,
   mouse: <Mouse className="h-8 w-8" />,
@@ -261,6 +262,9 @@ const propertyIcons = {
   light: <Lightbulb className="h-8 w-8" />,
   "wifi-router": <Wifi className="h-8 w-8" />,
   ac: <AirVent className="h-8 w-8" />,
+
+  
+
 };
 
 export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) => {
