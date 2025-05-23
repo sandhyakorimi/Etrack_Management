@@ -6,13 +6,14 @@ export const BuildingMap = () => {
   const navigate = useNavigate();
   const [selectedFloor, setSelectedFloor] = useState(null);
 
-  const totalFloors = buildingData.floors.length;
+  // Safeguard for buildingData.floors, ensure at least 5 floors
+  const totalFloors = Math.max(buildingData?.floors?.length || 0, 5);
 
   // Calculate total properties and status counts for each floor
-  const floorStats = buildingData.floors.map(floor => {
-    const properties = floor.halls.flatMap(hall => 
-      hall.rooms.flatMap(room => room.properties)
-    );
+  const floorStats = (buildingData?.floors || []).map(floor => {
+    const properties = floor.halls?.flatMap(hall => 
+      hall.rooms?.flatMap(room => room.properties) || []
+    ) || [];
     
     return {
       id: floor.id,
@@ -21,6 +22,44 @@ export const BuildingMap = () => {
       notWorkingProperties: properties.filter(p => p.status === 'not_working').length,
     };
   });
+
+  // Fallback for 5th floor if not in buildingData
+  const getFloorData = (floorId) => {
+    const floor = buildingData?.floors?.find(f => f.id === floorId);
+    if (floor) return floor;
+    if (floorId === 5) {
+      return {
+        id: 5,
+        halls: [
+          {
+            id: 'center-5',
+            name: 'Center',
+            rooms: [
+              { id: 'room-5-1', name: 'Room 5-1', properties: [] },
+              { id: 'room-5-2', name: 'Room 5-2', properties: [] },
+            ],
+          },
+          {
+            id: 'left-wing-5',
+            name: 'Left Wing',
+            rooms: [
+              { id: 'room-5-3', name: 'Room 5-3', properties: [] },
+              { id: 'room-5-4', name: 'Room 5-4', properties: [] },
+            ],
+          },
+          {
+            id: 'right-wing-5',
+            name: 'Right Wing',
+            rooms: [
+              { id: 'room-5-5', name: 'Server Room', properties: [] },
+              { id: 'room-5-6', name: 'Room 5-6', properties: [] },
+            ],
+          },
+        ],
+      };
+    }
+    return null;
+  };
 
   const handleFloorClick = (floorId) => {
     setSelectedFloor(floorId);
@@ -31,7 +70,7 @@ export const BuildingMap = () => {
   };
 
   return (
-    <div className="space-y-6 p-4 sm:p-6 max-w-7xl mx-auto">
+    <div className="space-y-4 p-3 sm:p-3 max-w-7xl mx-auto">
       <div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Building Map</h1>
         <p className="text-gray-600 dark:text-gray-400 mt-2">
@@ -39,49 +78,33 @@ export const BuildingMap = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
         {/* Building visualization */}
-        <div className="lg:col-span-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold mb-6 text-center text-gray-900 dark:text-white">Building Structure</h2>
+        <div className="lg:col-span-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3">
+          <h2 className="text-xl font-semibold mb-3 text-center text-gray-900 dark:text-white">Building Structure</h2>
           
-          <div className="relative space-y-4 max-w-4xl mx-auto">
+          <div className="space-y-3 max-w-4xl mx-auto">
             {/* Floor selector */}
-            <div className="absolute top-0 left-0 bottom-0 w-16 flex flex-col justify-center space-y-3">
+            <div className="flex flex-row flex-wrap gap-2 justify-center mb-4">
               {[...Array(totalFloors)].map((_, index) => {
-                const floorId = totalFloors + 1 - index;
-                const floor = buildingData.floors.find(f => f.id === floorId);
+                const floorId = index + 1; // Ascending order
+                const floor = getFloorData(floorId);
                 
                 if (!floor) return null;
                 
                 const isSelected = selectedFloor === floorId;
-                const stats = floorStats.find(s => s.id === floorId);
-                
-                const healthPercentage = stats && stats.totalProperties > 0
-                  ? Math.round((stats.workingProperties / stats.totalProperties) * 100)
-                  : 100;
-                
-                // Set floor button health indicator color based on health percentage
-                // Healthy: 70-100% (green), Needs Attention: 50-69% (yellow), Critical: 0-49% (red)
-                let healthColor = 'bg-green-500';
-                // if (healthPercentage < 70) healthColor = 'bg-yellow-500';
-                // if (healthPercentage < 50) healthColor = 'bg-red-500';
                 
                 return (
                   <button 
                     key={floorId}
-                    className={`flex items-center justify-center w-12 h-12 rounded-lg text-sm font-medium transition-all duration-300
+                    className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-300
                       ${isSelected 
-                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 ring-2 ring-blue-500'
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 ring-2 ring-green-500'
                         : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                       }`}
                     onClick={() => handleFloorClick(floorId)}
                   >
-                    <div className="relative">
-                      <span>{floorId}</span>
-                      {stats && stats.totalProperties > 0 && (
-                        <span className={`absolute -top-1 -right-1 w-3 h-3 rounded-full ${healthColor} ring-1 ring-white dark:ring-gray-800`}></span>
-                      )}
-                    </div>
+                    Floor {floorId}
                   </button>
                 );
               })}
@@ -89,16 +112,16 @@ export const BuildingMap = () => {
             
             {/* Floor visualization */}
             {selectedFloor ? (
-              <div className="ml-20 animate-fade-in">
-                <h3 className="text-lg font-medium mb-4 text-center text-gray-900 dark:text-white">
+              <div className="animate-fade-in">
+                <h3 className="text-lg font-medium mb-3 text-center text-gray-900 dark:text-white">
                   Floor {selectedFloor}
                 </h3>
                 
                 <div className="space-y-4">
-                  {/* Center/Outdoor/Corridor Hall */}
+                  {/* Center/Outdoor Hall */}
                   {(() => {
                     const floor = buildingData.floors.find(f => f.id === selectedFloor);
-                    const centerHall = floor?.halls.find(h => h.name === 'Center' || h.name === 'Outdoor' || h.name === 'Corridor');
+                    const centerHall = floor?.halls.find(h => h.name === 'Center' || h.name === 'Outdoor');
                     
                     if (!centerHall) {
                       return (
@@ -108,13 +131,14 @@ export const BuildingMap = () => {
                       );
                     }
                     
-                    const hallProps = centerHall.rooms.flatMap(room => room.properties);
+                    const hallProps = centerHall.rooms?.flatMap(room => room.properties || []) || [];
                     const workingCount = hallProps.filter(p => p.status === 'working').length;
                     const healthPercentage = hallProps.length > 0
                       ? Math.round((workingCount / hallProps.length) * 100)
                       : 100;
                     
-                    // Set Center/Outdoor/Corridor hall to yellow gradient regardless of health percentage
+                    // Set Center/Outdoor hall to yellow gradient regardless of health percentage
+                    // Text color is gray-900 for readability on yellow background
                     let healthColor = 'from-yellow-500 to-yellow-400';
                     let textColor = 'text-gray-900';
                     let borderColor = 'border-gray-300 dark:border-gray-600';
@@ -131,32 +155,30 @@ export const BuildingMap = () => {
                     return (
                       <div 
                         key={centerHall.id}
-                        className={`bg-gradient-to-r ${healthColor} rounded-lg p-4 border ${borderColor} cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 max-w-md mx-auto`}
+                        className={`bg-gradient-to-r ${healthColor} rounded-lg p-3 border ${borderColor} cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 max-w-md mx-auto flex-shrink-0`}
                         onClick={() => handleHallClick(selectedFloor, centerHall.id)}
                       >
                         <h4 className={`font-medium ${textColor} mb-2 text-center text-lg`}>{centerHall.name}</h4>
-                        <div className={`flex flex-row flex-wrap gap-2 ${centerHall.rooms.length === 1 ? 'justify-center' : 'justify-center'}`}>
-                          {centerHall.rooms.map(room => {
-                            const roomProps = room.properties;
+                        <div className={`flex flex-row flex-wrap gap-2 ${centerHall.rooms?.length === 1 ? 'justify-center' : 'justify-center'} max-w-full`}>
+                          {centerHall.rooms?.map(room => {
+                            const roomProps = room.properties || [];
                             const roomWorking = roomProps.filter(p => p.status === 'working').length;
                             const roomHealth = roomProps.length > 0
                               ? Math.round((roomWorking / roomProps.length) * 100)
                               : 100;
                             
                             let roomBg = 'bg-white bg-opacity-90';
-                            // if (roomHealth < 70) roomBg = 'bg-white bg-opacity-75';
-                            // if (roomHealth < 50) roomBg = 'bg-white bg-opacity-60';
                             
                             return (
                               <div 
                                 key={room.id}
-                                className={`${roomBg} p-2 rounded text-center ${roomProps.length > 0 ? 'text-gray-800' : 'text-gray-500'} w-32`}
+                                className={`${roomBg} p-3 rounded text-center ${roomProps.length > 0 ? 'text-gray-800' : 'text-gray-500'} w-24 shrink-0`}
                               >
-                                <p className="text-sm font-medium truncate">{room.name}</p>
+                                <p className="text-xs font-medium overflow-hidden text-ellipsis whitespace-nowrap">{room.name}</p>
                                 <p className="text-xs">{roomProps.length} items</p>
                               </div>
                             );
-                          })}
+                          }) || <p className="text-gray-500">No rooms available</p>}
                         </div>
                       </div>
                     );
@@ -203,6 +225,8 @@ export const BuildingMap = () => {
                                   ? Math.round((roomWorking / roomProps.length) * 100)
                                   : 100;
                                 
+                                // Set room background opacity based on room health
+                                // Healthy: 70-100% (90% opacity), Needs Attention: 50-69% (75% opacity), Critical: 0-49% (60% opacity)
                                 let roomBg = 'bg-white bg-opacity-90';
                                 // if (roomHealth < 70) roomBg = 'bg-white bg-opacity-75';
                                 // if (roomHealth < 50) roomBg = 'bg-white bg-opacity-60';
@@ -225,7 +249,7 @@ export const BuildingMap = () => {
                 </div>
               </div>
             ) : (
-              <div className="ml-20 flex items-center justify-center h-64 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
+              <div className="flex items-center justify-center h-64 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg">
                 <p className="text-gray-500 dark:text-gray-400">
                   Select a floor to view its layout
                 </p>
@@ -235,11 +259,11 @@ export const BuildingMap = () => {
         </div>
         
         {/* Building stats */}
-        <div className="lg:col-span-4 space-y-4">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4">
-            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Building Stats</h2>
+        <div className="lg:col-span-4 space-y-3">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3">
+            <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Building Stats</h2>
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Floors</p>
                 <p className="text-2xl font-medium text-gray-900 dark:text-white">{totalFloors}</p>
@@ -248,38 +272,34 @@ export const BuildingMap = () => {
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Total Sections</p>
                 <p className="text-2xl font-medium text-gray-900 dark:text-white">
-                  {buildingData.floors.reduce((acc, floor) => acc + floor.halls.length, 0)}
+                  {buildingData?.floors?.reduce((acc, floor) => acc + (floor.halls?.length || 0), 0) || 0}
                 </p>
               </div>
               
               <div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Total Rooms</p>
                 <p className="text-2xl font-medium text-gray-900 dark:text-white">
-                  {buildingData.floors.reduce(
-                    (acc, floor) => acc + floor.halls.reduce(
-                      (hallAcc, hall) => hallAcc + hall.rooms.length, 0
-                    ), 0
-                  )}
+                  {buildingData?.floors?.reduce(
+                    (acc, floor) => acc + (floor.halls?.reduce(
+                      (hallAcc, hall) => hallAcc + (hall.rooms?.length || 0), 0
+                    ) || 0), 0
+                  ) || 0}
                 </p>
               </div>
             </div>
           </div>
           
           {/* Floor health */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4">
-            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Floor Health</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-3">
+            <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Floor Health</h2>
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               {floorStats.map(stats => {
                 const healthPercentage = stats.totalProperties > 0
                   ? Math.round((stats.workingProperties / stats.totalProperties) * 100)
                   : 100;
                 
-                // Set floor health bar color based on health percentage
-                // Healthy: 70-100% (green), Needs Attention: 50-69% (yellow), Critical: 0-49% (red)
-                let healthColor = 'bg-green-500';
-                // if (healthPercentage < 70) healthColor = 'bg-yellow-500';
-                // if (healthPercentage < 50) healthColor = 'bg-red-500';
+                 let healthColor = healthPercentage >= 80 ? 'bg-green-500' : 'bg-red-500';
                 
                 return (
                   <div key={stats.id} className="space-y-1">
@@ -305,28 +325,6 @@ export const BuildingMap = () => {
               })}
             </div>
           </div>
-          
-          {/* Legend */}
-          {/* <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4">
-            <h2 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Map Legend</h2>
-            
-            <div className="space-y-2">
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-green-500 mr-2 shadow-md"></div>
-                <p className="text-sm text-gray-700 dark:text-gray-300">Healthy (70-100%)</p>
-              </div>
-              
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-yellow-500 mr-2 shadow-md"></div>
-                <p className="text-sm text-gray-700 dark:text-gray-300">Needs Attention (50-69%)</p>
-              </div>
-              
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded-full bg-red-500 mr-2 shadow-md"></div>
-                <p className="text-sm text-gray-700 dark:text-gray-300">Critical (0-49%)</p>
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </div>

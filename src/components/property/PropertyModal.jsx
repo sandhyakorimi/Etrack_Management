@@ -259,7 +259,7 @@ const propertyIcons = {
   mouse: <Mouse className="h-8 w-8" />,
   fan: <Fan className="h-8 w-8" />,
   light: <Lightbulb className="h-8 w-8" />,
-  router: <Wifi className="h-8 w-8" />,
+  "wifi-router": <Wifi className="h-8 w-8" />,
   ac: <AirVent className="h-8 w-8" />,
 };
 
