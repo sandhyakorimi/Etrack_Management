@@ -1,7 +1,6 @@
 
 //  *************    Change the UI of the card ***********
 //  *********     Make it aligned top of all the other cards by applying higher z-index  ***********
-
 // ************    The Navbar issue Resolved by making w-full and some changes  ***************
 
 
@@ -157,7 +156,7 @@ export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) 
                       name="status"
                       value={formData.status}
                       onChange={handleInputChange}
-                      className="border rounded p-1 w-32 dark:bg-gray-700 dark:text-white"
+                      className="border rounded p-1 w-32 dark:bg-gray-700 dark:text-white "
                     >
                       <option value="working">Working</option>
                       <option value="not-working">Not Working</option>
