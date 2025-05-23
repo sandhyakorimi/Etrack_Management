@@ -1,8 +1,4 @@
-
-//  *************    Change the UI of the card ***********
-//  *********     Make it aligned top of all the other cards by applying higher z-index  ***********
-// ************    The Navbar issue Resolved by making w-full and some changes  ***************
-
+ 
 
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -11,13 +7,17 @@ import { X, Monitor, Keyboard, Mouse, Fan, Lightbulb, Wifi, AirVent } from 'luci
 import { cn } from '../../utils/cn';
 
 const propertyIcons = {
+
   monitor: <Monitor className="h-8 w-8" />,
   keyboard: <Keyboard className="h-8 w-8" />,
   mouse: <Mouse className="h-8 w-8" />,
   fan: <Fan className="h-8 w-8" />,
   light: <Lightbulb className="h-8 w-8" />,
-  router: <Wifi className="h-8 w-8" />,
+  "wifi-router": <Wifi className="h-8 w-8" />,
   ac: <AirVent className="h-8 w-8" />,
+
+  
+
 };
 
 export const PropertyModal = ({ property, onClose, onEdit, enableEdit = true }) => {
